@@ -3,9 +3,9 @@ services:
     build: .
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "8473:8473"
     environment:
-      - PORT=8080
+      - PORT=8473
       - DB_PATH=/app/data/monitor.db
       - GITHUB_TOKEN=${GITHUB_TOKEN:-}
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}

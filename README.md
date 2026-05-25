@@ -12,7 +12,7 @@ cp .env.example .env   # fill in TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, optional 
 docker compose up -d --build
 ```
 
-Open the UI at http://localhost:8080. On first run, if Telegram env vars are set,
+Open the UI at http://localhost:8473. On first run, if Telegram env vars are set,
 a default subtensor monitor + Telegram channel are seeded. The first poll seeds a
 silent baseline (no backlog blast); you are alerted only on new PR transitions.
 
@@ -23,8 +23,8 @@ silent baseline (no backlog blast); you are alerted only on new PR transitions.
 
 ```bash
 npm install
-npm run dev            # backend on :8080 (tsx watch)
-cd web && npm install && npm run dev   # UI on :5173, proxies /api to :8080
+npm run dev            # backend on :8473 (tsx watch)
+cd web && npm install && npm run dev   # UI on :5173, proxies /api to :8473
 npm test               # backend test suite (vitest)
 ```
 
