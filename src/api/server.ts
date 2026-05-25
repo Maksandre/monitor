@@ -5,12 +5,14 @@ import { fileURLToPath } from "node:url";
 import type { DB } from "../db/index.js";
 import type { Registry } from "../plugins/registry.js";
 import { healthRoutes } from "./routes/health.js";
+import { pluginTypeRoutes } from "./routes/plugin-types.js";
 
 export function buildServer(db: DB, reg: Registry): FastifyInstance {
   const app = Fastify({ logger: false });
 
   healthRoutes(app);
-  // plugin-type, channel, monitor, alert routes are registered here in later tasks
+  pluginTypeRoutes(app, reg);
+  // channel, monitor, alert routes are registered here in later tasks
 
   const webDir = fileURLToPath(new URL("../../web/dist", import.meta.url));
   if (existsSync(webDir)) {
