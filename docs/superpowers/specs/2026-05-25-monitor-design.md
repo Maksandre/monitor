@@ -157,7 +157,10 @@ interval ~120s, configurable per monitor.
 - State in SQLite survives restarts; enabled monitors resume from saved cursor on boot.
 - Each monitor poll runs in its own try/catch; an erroring monitor records
   `lastError` (shown in UI) and never crashes the service or other monitors.
-- Backoff on repeated source errors (GitHub rate-limit / 5xx); respects `Retry-After`.
+- Backoff on repeated source errors (GitHub rate-limit / 5xx): the scheduler's
+  exponential per-monitor backoff slows polling after consecutive failures.
+  (Honoring GitHub's explicit `Retry-After` header is a future enhancement; the
+  GitHub source currently fetches a single page of recently-updated PRs.)
 - Failed notifier sends retried with backoff and logged in `alerts`.
 - Docker `restart: unless-stopped` + a `/health` endpoint for self-healing.
 - Structured logging (pino).

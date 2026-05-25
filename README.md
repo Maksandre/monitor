@@ -37,3 +37,20 @@ npm test               # backend test suite (vitest)
 
 The UI form, scheduling, dedup, and alerting work automatically. Notifiers follow
 the same pattern under `src/plugins/notifiers/`.
+
+## Known limitations (v1)
+
+- **No UI authentication.** Single-user, LAN-only by design.
+- **GitHub source reads one page** (the 100 most-recently-updated PRs) per poll.
+  Because PRs are sorted by `updated`, a PR's open/merge transition bumps it to
+  the top, so it is reliably seen at the moment it changes given the short poll
+  interval; a transition would only be missed if 100+ *other* PRs were updated
+  within a single poll window. Multi-page pagination is a future enhancement.
+- **GitHub rate limiting** is handled by the scheduler's exponential backoff
+  (repeated errors slow a monitor's polling), not by honoring `Retry-After`
+  explicitly. Set `GITHUB_TOKEN` to get the 5000 req/hr authenticated limit.
+- **A permanently-failed alert is not retried across polls.** Delivery is retried
+  up to 3 times within a poll; after that the failure is recorded in the alerts
+  log (visible in the UI) but not re-sent on later polls.
+- **Secrets (Telegram bot token) are stored in the SQLite DB** and redacted on
+  API reads. Acceptable for a local single-user box.
