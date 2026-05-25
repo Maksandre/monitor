@@ -1,0 +1,24 @@
+import Fastify, { type FastifyInstance } from "fastify";
+import fastifyStatic from "@fastify/static";
+import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import type { DB } from "../db/index.js";
+import type { Registry } from "../plugins/registry.js";
+import { healthRoutes } from "./routes/health.js";
+
+export function buildServer(db: DB, reg: Registry): FastifyInstance {
+  const app = Fastify({ logger: false });
+
+  healthRoutes(app);
+  // plugin-type, channel, monitor, alert routes are registered here in later tasks
+
+  const webDir = fileURLToPath(new URL("../../web/dist", import.meta.url));
+  if (existsSync(webDir)) {
+    app.register(fastifyStatic, { root: webDir });
+    app.setNotFoundHandler((req, reply) => {
+      if (req.url.startsWith("/api")) return reply.code(404).send({ error: "not found" });
+      return reply.sendFile("index.html");
+    });
+  }
+  return app;
+}
