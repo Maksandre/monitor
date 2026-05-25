@@ -6,7 +6,7 @@ async function req<T>(method: string, url: string, body?: unknown): Promise<T> {
   return res.status === 204 ? (undefined as T) : ((await res.json()) as T);
 }
 
-export interface FieldDescriptor { name: string; label: string; type: string; required: boolean; default?: unknown; help?: string; options?: string[]; }
+export interface FieldDescriptor { name: string; label: string; type: string; required: boolean; default?: unknown; help?: string; placeholder?: string; options?: string[]; }
 export interface PluginType { type: string; displayName: string; fields: FieldDescriptor[]; }
 export interface Monitor { id: string; name: string; sourceType: string; config: Record<string, unknown>; channelId: string | null; pollIntervalSec: number; enabled: boolean; baselined: boolean; lastPolledAt: string | null; lastError: string | null; errorCount: number; }
 export interface Channel { id: string; name: string; notifierType: string; config: Record<string, unknown>; }
@@ -25,4 +25,5 @@ export const api = {
   createChannel: (c: object) => req<{ id: string }>("POST", "/api/channels", c),
   deleteChannel: (id: string) => req<void>("DELETE", `/api/channels/${id}`),
   alerts: () => req<AlertRow[]>("GET", "/api/alerts"),
+  monitorAlerts: (id: string) => req<AlertRow[]>("GET", `/api/monitors/${id}/alerts`),
 };
