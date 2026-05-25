@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Monitors } from "./pages/Monitors.js";
 import { MonitorForm } from "./pages/MonitorForm.js";
+import { Channels } from "./pages/Channels.js";
+import { Alerts } from "./pages/Alerts.js";
 import type { Monitor } from "./api.js";
 
 type Tab = "monitors" | "channels" | "alerts";
@@ -19,8 +21,8 @@ export function App() {
       </nav>
       {tab === "monitors" && !editing && <Monitors onNew={() => setEditing("new")} onEdit={setEditing} />}
       {tab === "monitors" && editing && <MonitorForm monitor={editing} onDone={() => setEditing(null)} />}
-      {tab === "channels" && <div>channels</div>}
-      {tab === "alerts" && <div>alerts</div>}
+      {tab === "channels" && <Channels />}
+      {tab === "alerts" && <Alerts />}
     </div>
   );
 }
