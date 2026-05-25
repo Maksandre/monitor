@@ -274,7 +274,7 @@ export function Tabs({ tabs, active, onChange }: TabsProps): React.ReactElement 
 interface DrawerProps {
   open: boolean;
   onClose: () => void;
-  title: string;
+  title: React.ReactNode;
   actions?: React.ReactNode;
   children?: React.ReactNode;
 }
