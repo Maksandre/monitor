@@ -22,7 +22,15 @@ const fields: FieldDescriptor[] = [
 
 function matchesTitle(title: string, pattern: string): boolean {
   const m = pattern.match(/^\/(.*)\/(\w*)$/);
-  if (m) return new RegExp(m[1], m[2].includes("i") ? m[2] : m[2] + "i").test(title);
+  if (m) {
+    try {
+      const flags = m[2].includes("i") ? m[2] : m[2] + "i";
+      return new RegExp(m[1], flags).test(title);
+    } catch {
+      // invalid regex — fall back to literal substring match
+      return title.toLowerCase().includes(pattern.toLowerCase());
+    }
+  }
   return title.toLowerCase().includes(pattern.toLowerCase());
 }
 

@@ -52,4 +52,15 @@ describe("githubPullRequestsSource", () => {
     expect(events[0].title.toLowerCase()).toContain("opened");
     expect(events[0].url).toContain("/pull/2643");
   });
+
+  it("supports /regex/ title matching", async () => {
+    const src = githubPullRequestsSource(clientReturning(subtensorPrs));
+    const { events } = await src.check({ ...baseConfig, titleMatch: "/mainnet deploy \\d/", triggerKinds: ["opened"] }, {});
+    expect(events.map((e) => e.dedupeKey)).toEqual(["pr:2643:opened"]);
+  });
+
+  it("falls back to substring (does not throw) on an invalid regex pattern", async () => {
+    const src = githubPullRequestsSource(clientReturning(subtensorPrs));
+    await expect(src.check({ ...baseConfig, titleMatch: "/[deploy/" }, {})).resolves.toBeDefined();
+  });
 });

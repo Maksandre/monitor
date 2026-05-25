@@ -1,4 +1,4 @@
-import type { ZodType } from "zod";
+import type { ZodType, ZodTypeDef } from "zod";
 
 export type FieldType = "text" | "textarea" | "number" | "tags" | "multiselect" | "password";
 
@@ -35,7 +35,7 @@ export interface Alert {
 export interface Source<Config = unknown> {
   type: string;
   displayName: string;
-  configSchema: ZodType<Config>;
+  configSchema: ZodType<Config, ZodTypeDef, unknown>;
   fields: FieldDescriptor[];
   check(config: Config, state: SourceState): Promise<CheckResult>;
 }
@@ -43,7 +43,7 @@ export interface Source<Config = unknown> {
 export interface Notifier<Config = unknown> {
   type: string;
   displayName: string;
-  configSchema: ZodType<Config>;
+  configSchema: ZodType<Config, ZodTypeDef, unknown>;
   fields: FieldDescriptor[];
   send(config: Config, alert: Alert): Promise<void>;
 }
