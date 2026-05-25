@@ -7,6 +7,7 @@ import type { Registry } from "../plugins/registry.js";
 import { healthRoutes } from "./routes/health.js";
 import { pluginTypeRoutes } from "./routes/plugin-types.js";
 import { channelRoutes } from "./routes/channels.js";
+import { monitorRoutes } from "./routes/monitors.js";
 
 export function buildServer(db: DB, reg: Registry): FastifyInstance {
   const app = Fastify({ logger: false });
@@ -19,7 +20,7 @@ export function buildServer(db: DB, reg: Registry): FastifyInstance {
   healthRoutes(app);
   pluginTypeRoutes(app, reg);
   channelRoutes(app, db, reg);
-  // monitor, alert routes are registered here in later tasks
+  monitorRoutes(app, db, reg);
 
   const webDir = fileURLToPath(new URL("../../web/dist", import.meta.url));
   if (existsSync(webDir)) {
