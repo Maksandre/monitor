@@ -1,2 +1,9 @@
 .agents/skills
 .claude/skills
+node_modules
+dist
+web/dist
+web/node_modules
+*.db
+*.db-*
+.env
