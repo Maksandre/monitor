@@ -4,7 +4,7 @@ import { loadConfig } from "./config.js";
 describe("loadConfig", () => {
   it("uses defaults when env is empty", () => {
     const c = loadConfig({});
-    expect(c.port).toBe(8080);
+    expect(c.port).toBe(8473);
     expect(c.dbPath).toBe("data/monitor.db");
     expect(c.githubToken).toBeUndefined();
   });

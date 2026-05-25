@@ -16,6 +16,6 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/web/dist ./web/dist
-EXPOSE 8080
+EXPOSE 8473
 VOLUME ["/app/data"]
 CMD ["node", "dist/index.js"]
