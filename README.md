@@ -2,8 +2,9 @@
 
 Extensible event-monitoring service. Polls pluggable **sources** for events and
 delivers alerts through pluggable **notifiers**. Ships with a GitHub
-pull-requests source and a Telegram notifier; first use case is alerting when an
-`opentensor/subtensor` PR titled `mainnet deploy …` is opened or merged.
+pull-requests source and a Telegram notifier. Monitors are created and configured
+through the UI — for example, alert when a repo's PR whose title matches a pattern
+is opened or merged.
 
 ## Run with Docker (Mac mini)
 
@@ -13,8 +14,9 @@ docker compose up -d --build
 ```
 
 Open the UI at http://localhost:8473. On first run, if Telegram env vars are set,
-a default subtensor monitor + Telegram channel are seeded. The first poll seeds a
-silent baseline (no backlog blast); you are alerted only on new PR transitions.
+a default Telegram channel is created for you; add monitors from the UI. Each
+monitor's first poll seeds a silent baseline (no backlog blast); you are alerted
+only on events seen after that.
 
 > Single-user, no authentication. Bind only to your LAN; do not expose to the
 > public internet without putting auth in front of it.

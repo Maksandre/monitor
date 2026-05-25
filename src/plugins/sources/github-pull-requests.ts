@@ -13,9 +13,9 @@ export const githubPrConfigSchema = z.object({
 export type GithubPrConfig = z.infer<typeof githubPrConfigSchema>;
 
 const fields: FieldDescriptor[] = [
-  { name: "repo", label: "Repository (owner/name)", type: "text", required: true, default: "opentensor/subtensor" },
-  { name: "titleMatch", label: "Title contains", type: "text", required: true, default: "mainnet deploy", help: "Case-insensitive substring or /regex/" },
-  { name: "excludeMatch", label: "Exclude titles containing", type: "text", required: false, default: "", help: "Optional; e.g. revert" },
+  { name: "repo", label: "Repository (owner/name)", type: "text", required: true, default: "", help: "e.g. octocat/hello-world" },
+  { name: "titleMatch", label: "Title contains", type: "text", required: true, default: "", help: "Case-insensitive substring, or /regex/" },
+  { name: "excludeMatch", label: "Exclude titles containing", type: "text", required: false, default: "", help: "Optional substring or /regex/ to exclude" },
   { name: "labels", label: "Required labels (all)", type: "tags", required: false, default: [] },
   { name: "triggerKinds", label: "Alert on", type: "multiselect", required: true, default: ["opened", "merged"], options: ["opened", "merged", "closed"] },
 ];
