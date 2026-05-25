@@ -8,6 +8,7 @@ import { healthRoutes } from "./routes/health.js";
 import { pluginTypeRoutes } from "./routes/plugin-types.js";
 import { channelRoutes } from "./routes/channels.js";
 import { monitorRoutes } from "./routes/monitors.js";
+import { alertRoutes } from "./routes/alerts.js";
 
 export function buildServer(db: DB, reg: Registry): FastifyInstance {
   const app = Fastify({ logger: false });
@@ -21,6 +22,7 @@ export function buildServer(db: DB, reg: Registry): FastifyInstance {
   pluginTypeRoutes(app, reg);
   channelRoutes(app, db, reg);
   monitorRoutes(app, db, reg);
+  alertRoutes(app, db);
 
   const webDir = fileURLToPath(new URL("../../web/dist", import.meta.url));
   if (existsSync(webDir)) {
