@@ -31,8 +31,10 @@ export function channelRoutes(app: FastifyInstance, db: DB, reg: Registry): void
 
   app.put("/api/channels/:id", async (req, reply) => {
     const { id } = req.params as { id: string };
-    const body = upsertSchema.parse(req.body);
-    reg.getNotifier(body.notifierType).configSchema.parse(body.config);
+    const existing = channels.get(db, id);
+    if (!existing) return reply.code(404).send({ error: "not found" });
+    const body = z.object({ name: z.string().min(1), config: z.record(z.unknown()) }).parse(req.body);
+    reg.getNotifier(existing.notifierType).configSchema.parse(body.config); // validate against the channel's real type
     channels.update(db, id, { name: body.name, config: body.config });
     return reply.code(204).send();
   });

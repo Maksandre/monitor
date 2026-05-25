@@ -65,4 +65,20 @@ describe("monitors API", () => {
     expect((await app.inject({ method: "DELETE", url: `/api/monitors/${id}` })).statusCode).toBe(204);
     expect((await app.inject({ method: "GET", url: "/api/monitors" })).json()).toHaveLength(0);
   });
+
+  it("returns 400 for an unknown source type", async () => {
+    const res = await app.inject({
+      method: "POST", url: "/api/monitors",
+      payload: { name: "x", sourceType: "does-not-exist", config: {}, channelId: null, pollIntervalSec: 120 },
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  it("returns 404 when updating a nonexistent monitor", async () => {
+    const res = await app.inject({
+      method: "PUT", url: "/api/monitors/nope",
+      payload: { name: "x", sourceType: "github-pull-requests", config: { repo: "o/r", titleMatch: "x" }, channelId: null, pollIntervalSec: 120 },
+    });
+    expect(res.statusCode).toBe(404);
+  });
 });

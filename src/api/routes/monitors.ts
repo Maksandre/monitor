@@ -38,9 +38,11 @@ export function monitorRoutes(app: FastifyInstance, db: DB, reg: Registry): void
   });
 
   app.put("/api/monitors/:id", async (req, reply) => {
+    const existing = monitors.get(db, (req.params as { id: string }).id);
+    if (!existing) return reply.code(404).send({ error: "not found" });
     const body = upsertSchema.parse(req.body);
-    reg.getSource(body.sourceType).configSchema.parse(body.config);
-    monitors.update(db, (req.params as { id: string }).id, {
+    reg.getSource(existing.sourceType).configSchema.parse(body.config); // validate against the monitor's real type
+    monitors.update(db, existing.id, {
       name: body.name, config: body.config, channelId: body.channelId, pollIntervalSec: body.pollIntervalSec,
     });
     return reply.code(204).send();

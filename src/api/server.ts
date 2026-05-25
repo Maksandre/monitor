@@ -4,6 +4,7 @@ import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import type { DB } from "../db/index.js";
 import type { Registry } from "../plugins/registry.js";
+import { logger } from "../logger.js";
 import { healthRoutes } from "./routes/health.js";
 import { pluginTypeRoutes } from "./routes/plugin-types.js";
 import { channelRoutes } from "./routes/channels.js";
@@ -13,9 +14,11 @@ import { alertRoutes } from "./routes/alerts.js";
 export function buildServer(db: DB, reg: Registry): FastifyInstance {
   const app = Fastify({ logger: false });
 
-  app.setErrorHandler((err, _req, reply) => {
+  app.setErrorHandler((err, req, reply) => {
     if ((err as any).name === "ZodError") return reply.code(400).send({ error: "validation", details: (err as any).issues });
-    return reply.code(500).send({ error: err.message });
+    if (/^unknown (source|notifier):/.test(err.message)) return reply.code(400).send({ error: err.message });
+    logger.error({ err: err.message, url: req.url }, "request failed");
+    return reply.code(500).send({ error: "internal error" });
   });
 
   healthRoutes(app);

@@ -38,4 +38,23 @@ describe("channels API", () => {
     });
     expect(res.statusCode).toBe(400);
   });
+
+  it("updates a channel against its stored type and keeps secrets redacted", async () => {
+    const create = await app.inject({
+      method: "POST", url: "/api/channels",
+      payload: { name: "tg", notifierType: "telegram", config: { botToken: "secret", chatId: "1" } },
+    });
+    const id = create.json().id;
+    const put = await app.inject({ method: "PUT", url: `/api/channels/${id}`, payload: { name: "tg2", config: { botToken: "newsecret", chatId: "2" } } });
+    expect(put.statusCode).toBe(204);
+    const list = await app.inject({ method: "GET", url: "/api/channels" });
+    expect(list.json()[0].name).toBe("tg2");
+    expect(list.json()[0].config.botToken).toBe("***");
+    expect(list.json()[0].config.chatId).toBe("2");
+  });
+
+  it("returns 404 when updating a nonexistent channel", async () => {
+    const res = await app.inject({ method: "PUT", url: "/api/channels/nope", payload: { name: "x", config: { botToken: "b", chatId: "1" } } });
+    expect(res.statusCode).toBe(404);
+  });
 });
