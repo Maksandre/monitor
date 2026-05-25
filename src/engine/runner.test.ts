@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { z } from "zod";
 import { openDb, type DB } from "../db/index.js";
 import * as monitors from "../db/monitors.js";
